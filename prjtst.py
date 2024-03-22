@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
 import sys
+from db import DB
 
 class RegistrationForm(QWidget):
     def __init__(self):
@@ -25,6 +26,10 @@ class RegistrationForm(QWidget):
         self.lb_email.setStyleSheet("font-size: 16pt;")
         self.edit_email = QLineEdit()
 
+        self.lb_login = QLabel("Login:")
+        self.lb_login.setStyleSheet("font-size: 16pt;")
+        self.edit_login = QLineEdit()
+
         self.lb_password = QLabel("Пароль:")
         self.lb_password.setStyleSheet("font-size: 16pt;")
         self.edit_password = QLineEdit()
@@ -46,6 +51,9 @@ class RegistrationForm(QWidget):
         self.layout.addWidget(self.lb_email)
         self.layout.addWidget(self.edit_email)
 
+        self.layout.addWidget(self.lb_login)
+        self.layout.addWidget(self.edit_login)
+
         self.layout.addWidget(self.lb_password)
         self.layout.addWidget(self.edit_password)
 
@@ -56,6 +64,8 @@ class RegistrationForm(QWidget):
         self.login_form = LoginForm()
 
     def register(self):
+        db = DB()
+        db.reg(self.edit_last_name.text(), self.edit_first_name.text(), self.edit_patronymic.text(), self.edit_email.text(), self.edit_login.text(), self.edit_password.text())
         self.login_form.show()
         self.close()
 
