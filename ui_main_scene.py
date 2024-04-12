@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_sceneENHXEC.ui'
+## Form generated from reading UI file 'main_scenejlzOpX.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.6.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -14,16 +14,19 @@ from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+    QPalette, QPixmap, QRadialGradient, QTransform, QAction)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QLineEdit, QMainWindow, QPushButton, QSizePolicy,
-    QSpacerItem, QStackedWidget, QVBoxLayout, QWidget)
+    QSpacerItem, QStackedWidget, QTextEdit, QVBoxLayout,
+    QWidget, QMenu)
 from db import DB
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(979, 600)
+        MainWindow.resize(979, 653)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_3 = QVBoxLayout(self.centralwidget)
@@ -40,17 +43,20 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.pushButton = QPushButton(self.top_menu)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setStyleSheet(u"background: rgb(242, 242, 242);")
+        self.btn_tm_account = QPushButton(self.top_menu)
+        self.btn_tm_account.setObjectName(u"btn_tm_account")
+        self.btn_tm_account.setStyleSheet(u"background: rgb(242, 242, 242);")
         icon = QIcon()
-        icon.addFile(u"../res/account_circle_black_36dp.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.pushButton.setIcon(icon)
-        self.pushButton.setIconSize(QSize(36, 36))
-        
+        icon.addFile(u"./res/account_circle_black_36dp.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.btn_tm_account.setIcon(icon)
+        self.btn_tm_account.setIconSize(QSize(36, 36))
+    
+        self.menu_acc = QMenu()
+        self.menu_acc.addAction('Войти', self.menu_log)
+        self.menu_acc.addAction('Регистрация', self.menu_reg)
+        self.btn_tm_account.setMenu(self.menu_acc)
 
-        self.horizontalLayout.addWidget(self.pushButton)
-
+        self.horizontalLayout.addWidget(self.btn_tm_account)
 
         self.verticalLayout_3.addWidget(self.top_menu)
 
@@ -68,11 +74,19 @@ class Ui_MainWindow(object):
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(9, 9, 9, 9)
-        self.pushButton_2 = QPushButton(self.left_menu)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setStyleSheet(u"background: rgb(242, 242, 242);")
+        self.btn_lm_ct = QPushButton(self.left_menu)
+        self.btn_lm_ct.setObjectName(u"btn_lm_ct")
+        self.btn_lm_ct.setStyleSheet(u"background: rgb(242, 242, 242);")
+        self.btn_lm_ct.clicked.connect(self.page_ct)
 
-        self.verticalLayout.addWidget(self.pushButton_2)
+        self.verticalLayout.addWidget(self.btn_lm_ct)
+
+        self.btn_lm_mt = QPushButton(self.left_menu)
+        self.btn_lm_mt.setObjectName(u"btn_lm_mt")
+        self.btn_lm_mt.setStyleSheet(u"background: rgb(242, 242, 242);")
+        self.btn_lm_mt.clicked.connect(self.page_mt)
+
+        self.verticalLayout.addWidget(self.btn_lm_mt)
 
         self.verticalSpacer = QSpacerItem(20, 487, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -90,125 +104,287 @@ class Ui_MainWindow(object):
         self.stackedWidget = QStackedWidget(self.right_menu)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setStyleSheet(u"background: rgb(242, 242, 242);")
-        self.page = QWidget()
-        self.page.setObjectName(u"page")
-        self.verticalLayout_4 = QVBoxLayout(self.page)
+        self.greet = QWidget()
+        self.greet.setObjectName(u"greet")
+        self.verticalLayout_7 = QVBoxLayout(self.greet)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.widget_2 = QWidget(self.greet)
+        self.widget_2.setObjectName(u"widget_2")
+        self.verticalLayout_6 = QVBoxLayout(self.widget_2)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalSpacer_4 = QSpacerItem(20, 464, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_6.addItem(self.verticalSpacer_4)
+
+        self.lbl_greet = QLabel(self.widget_2)
+        self.lbl_greet.setObjectName(u"lbl_greet")
+        self.lbl_greet.setStyleSheet(u"font-size: 48px;")
+
+        self.verticalLayout_6.addWidget(self.lbl_greet)
+
+
+        self.verticalLayout_7.addWidget(self.widget_2)
+
+        self.stackedWidget.addWidget(self.greet)
+        self.registration = QWidget()
+        self.registration.setObjectName(u"registration")
+        self.verticalLayout_4 = QVBoxLayout(self.registration)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.widget = QWidget(self.page)
+        self.widget = QWidget(self.registration)
         self.widget.setObjectName(u"widget")
         self.gridLayout = QGridLayout(self.widget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.lbl_ln = QLabel(self.widget)
-        self.lbl_ln.setObjectName(u"lbl_ln")
+        self.lbl_r_ln = QLabel(self.widget)
+        self.lbl_r_ln.setObjectName(u"lbl_r_ln")
 
-        self.gridLayout.addWidget(self.lbl_ln, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.lbl_r_ln, 1, 0, 1, 1)
 
-        self.lbl_log = QLabel(self.widget)
-        self.lbl_log.setObjectName(u"lbl_log")
+        self.lbl_r_fn = QLabel(self.widget)
+        self.lbl_r_fn.setObjectName(u"lbl_r_fn")
 
-        self.gridLayout.addWidget(self.lbl_log, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.lbl_r_fn, 2, 0, 1, 1)
 
-        self.widget_2 = QWidget(self.widget)
-        self.widget_2.setObjectName(u"widget_2")
-        self.horizontalLayout_3 = QHBoxLayout(self.widget_2)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.btn_reg = QPushButton(self.widget_2)
-        self.btn_reg.setObjectName(u"btn_reg")
-        self.btn_reg.clicked.connect(self.register)
+        self.le_r_fn = QLineEdit(self.widget)
+        self.le_r_fn.setObjectName(u"le_r_fn")
 
-        self.horizontalLayout_3.addWidget(self.btn_reg)
+        self.gridLayout.addWidget(self.le_r_fn, 2, 1, 1, 1)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.le_r_mn = QLineEdit(self.widget)
+        self.le_r_mn.setObjectName(u"le_r_mn")
 
-        self.horizontalLayout_3.addItem(self.horizontalSpacer_2)
-
-
-        self.gridLayout.addWidget(self.widget_2, 7, 0, 1, 2)
-
-        self.lbl_mn = QLabel(self.widget)
-        self.lbl_mn.setObjectName(u"lbl_mn")
-
-        self.gridLayout.addWidget(self.lbl_mn, 2, 0, 1, 1)
-
-        self.lineEdit_log = QLineEdit(self.widget)
-        self.lineEdit_log.setObjectName(u"lineEdit_log")
-
-        self.gridLayout.addWidget(self.lineEdit_log, 4, 1, 1, 1)
-
-        self.lbl_fn = QLabel(self.widget)
-        self.lbl_fn.setObjectName(u"lbl_fn")
-
-        self.gridLayout.addWidget(self.lbl_fn, 1, 0, 1, 1)
-
-        self.lineEdit_fn = QLineEdit(self.widget)
-        self.lineEdit_fn.setObjectName(u"lineEdit_fn")
-
-        self.gridLayout.addWidget(self.lineEdit_fn, 1, 1, 1, 1)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout.addItem(self.verticalSpacer_2, 6, 0, 1, 1)
-
-        self.lineEdit_ln = QLineEdit(self.widget)
-        self.lineEdit_ln.setObjectName(u"lineEdit_ln")
-
-        self.gridLayout.addWidget(self.lineEdit_ln, 0, 1, 1, 1)
-
-        self.lineEdit_mail = QLineEdit(self.widget)
-        self.lineEdit_mail.setObjectName(u"lineEdit_mail")
-
-        self.gridLayout.addWidget(self.lineEdit_mail, 3, 1, 1, 1)
-
-        self.lineEdit_mn = QLineEdit(self.widget)
-        self.lineEdit_mn.setObjectName(u"lineEdit_mn")
-
-        self.gridLayout.addWidget(self.lineEdit_mn, 2, 1, 1, 1)
-
-        self.lbl_mail = QLabel(self.widget)
-        self.lbl_mail.setObjectName(u"lbl_mail")
-
-        self.gridLayout.addWidget(self.lbl_mail, 3, 0, 1, 1)
-
-        self.lineEdit_pwd = QLineEdit(self.widget)
-        self.lineEdit_pwd.setObjectName(u"lineEdit_pwd")
-
-        self.gridLayout.addWidget(self.lineEdit_pwd, 5, 1, 1, 1)
-
-        self.lbl_pwd = QLabel(self.widget)
-        self.lbl_pwd.setObjectName(u"lbl_pwd")
-
-        self.gridLayout.addWidget(self.lbl_pwd, 5, 0, 1, 1)
+        self.gridLayout.addWidget(self.le_r_mn, 3, 1, 1, 1)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout.addItem(self.horizontalSpacer_3, 0, 2, 1, 1)
+        self.gridLayout.addItem(self.horizontalSpacer_3, 1, 2, 1, 1)
+
+        self.lbl_r_mail = QLabel(self.widget)
+        self.lbl_r_mail.setObjectName(u"lbl_r_mail")
+
+        self.gridLayout.addWidget(self.lbl_r_mail, 4, 0, 1, 1)
+
+        self.lbl_r_log = QLabel(self.widget)
+        self.lbl_r_log.setObjectName(u"lbl_r_log")
+
+        self.gridLayout.addWidget(self.lbl_r_log, 5, 0, 1, 1)
+
+        self.le_r_mail = QLineEdit(self.widget)
+        self.le_r_mail.setObjectName(u"le_r_mail")
+
+        self.gridLayout.addWidget(self.le_r_mail, 4, 1, 1, 1)
+
+        self.btn_reg = QPushButton(self.widget)
+        self.btn_reg.setObjectName(u"btn_reg")
+        self.btn_reg.clicked.connect(self.register)
+
+        self.gridLayout.addWidget(self.btn_reg, 8, 0, 1, 1)
+
+        self.lbl_r_mn = QLabel(self.widget)
+        self.lbl_r_mn.setObjectName(u"lbl_r_mn")
+
+        self.gridLayout.addWidget(self.lbl_r_mn, 3, 0, 1, 1)
+
+        self.le_r_ln = QLineEdit(self.widget)
+        self.le_r_ln.setObjectName(u"le_r_ln")
+
+        self.gridLayout.addWidget(self.le_r_ln, 1, 1, 1, 1)
+
+        self.le_r_pwd = QLineEdit(self.widget)
+        self.le_r_pwd.setObjectName(u"le_r_pwd")
+
+        self.gridLayout.addWidget(self.le_r_pwd, 6, 1, 1, 1)
+
+        self.lbl_r_pwd = QLabel(self.widget)
+        self.lbl_r_pwd.setObjectName(u"lbl_r_pwd")
+
+        self.gridLayout.addWidget(self.lbl_r_pwd, 6, 0, 1, 1)
+
+        self.le_r_log = QLineEdit(self.widget)
+        self.le_r_log.setObjectName(u"le_r_log")
+
+        self.gridLayout.addWidget(self.le_r_log, 5, 1, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout.addItem(self.verticalSpacer_2, 7, 0, 1, 1)
+
+        self.lbl_registration = QLabel(self.widget)
+        self.lbl_registration.setObjectName(u"lbl_registration")
+        self.lbl_registration.setStyleSheet(u"font-size: 24px;")
+
+        self.gridLayout.addWidget(self.lbl_registration, 0, 0, 1, 1)
 
 
         self.verticalLayout_4.addWidget(self.widget)
 
-        self.stackedWidget.addWidget(self.page)
-        self.page_2 = QWidget()
-        self.page_2.setObjectName(u"page_2")
-        self.verticalLayout_6 = QVBoxLayout(self.page_2)
-        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.widget_3 = QWidget(self.page_2)
-        self.widget_3.setObjectName(u"widget_3")
-        self.verticalLayout_5 = QVBoxLayout(self.widget_3)
+        self.stackedWidget.addWidget(self.registration)
+        self.login = QWidget()
+        self.login.setObjectName(u"login")
+        self.verticalLayout_5 = QVBoxLayout(self.login)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.verticalSpacer_3 = QSpacerItem(20, 432, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.widget_4 = QWidget(self.login)
+        self.widget_4.setObjectName(u"widget_4")
+        self.gridLayout_2 = QGridLayout(self.widget_4)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.verticalLayout_5.addItem(self.verticalSpacer_3)
+        self.gridLayout_2.addItem(self.horizontalSpacer_4, 1, 2, 1, 1)
 
-        self.lbl_greet = QLabel(self.widget_3)
-        self.lbl_greet.setObjectName(u"lbl_greet")
-        self.lbl_greet.setStyleSheet(u"font-size: 24pt;")
+        self.le_l_log = QLineEdit(self.widget_4)
+        self.le_l_log.setObjectName(u"le_l_log")
 
-        self.verticalLayout_5.addWidget(self.lbl_greet)
+        self.gridLayout_2.addWidget(self.le_l_log, 1, 1, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_2.addItem(self.verticalSpacer_3, 3, 1, 1, 1)
+
+        self.btn_log = QPushButton(self.widget_4)
+        self.btn_log.setObjectName(u"btn_log")
+
+        self.gridLayout_2.addWidget(self.btn_log, 4, 0, 1, 1)
+
+        self.le_l_pwd = QLineEdit(self.widget_4)
+        self.le_l_pwd.setObjectName(u"le_l_pwd")
+
+        self.gridLayout_2.addWidget(self.le_l_pwd, 2, 1, 1, 1)
+
+        self.lbl_l_pwd = QLabel(self.widget_4)
+        self.lbl_l_pwd.setObjectName(u"lbl_l_pwd")
+
+        self.gridLayout_2.addWidget(self.lbl_l_pwd, 2, 0, 1, 1)
+
+        self.lbl_l_log = QLabel(self.widget_4)
+        self.lbl_l_log.setObjectName(u"lbl_l_log")
+
+        self.gridLayout_2.addWidget(self.lbl_l_log, 1, 0, 1, 1)
+
+        self.lbl_login = QLabel(self.widget_4)
+        self.lbl_login.setObjectName(u"lbl_login")
+        self.lbl_login.setStyleSheet(u"font-size: 24px;")
+
+        self.gridLayout_2.addWidget(self.lbl_login, 0, 0, 1, 1)
 
 
-        self.verticalLayout_6.addWidget(self.widget_3)
+        self.verticalLayout_5.addWidget(self.widget_4)
 
-        self.stackedWidget.addWidget(self.page_2)
+        self.stackedWidget.addWidget(self.login)
+        self.create_test = QWidget()
+        self.create_test.setObjectName(u"create_test")
+        self.verticalLayout_8 = QVBoxLayout(self.create_test)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.w_cr = QWidget(self.create_test)
+        self.w_cr.setObjectName(u"w_cr")
+        self.verticalLayout_9 = QVBoxLayout(self.w_cr)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.info = QWidget(self.w_cr)
+        self.info.setObjectName(u"info")
+        self.gridLayout_3 = QGridLayout(self.info)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.le_ct_time = QLineEdit(self.info)
+        self.le_ct_time.setObjectName(u"le_ct_time")
+
+        self.gridLayout_3.addWidget(self.le_ct_time, 1, 4, 1, 1)
+
+        self.lbl_ct = QLabel(self.info)
+        self.lbl_ct.setObjectName(u"lbl_ct")
+        self.lbl_ct.setStyleSheet(u"font-size: 24px;")
+
+        self.gridLayout_3.addWidget(self.lbl_ct, 0, 0, 1, 2)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_3.addItem(self.verticalSpacer_5, 3, 0, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(216, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_3.addItem(self.horizontalSpacer_2, 1, 2, 1, 1)
+
+        self.le_ct_name = QLineEdit(self.info)
+        self.le_ct_name.setObjectName(u"le_ct_name")
+
+        self.gridLayout_3.addWidget(self.le_ct_name, 1, 1, 1, 1)
+
+        self.lbl_ct_name = QLabel(self.info)
+        self.lbl_ct_name.setObjectName(u"lbl_ct_name")
+
+        self.gridLayout_3.addWidget(self.lbl_ct_name, 1, 0, 1, 1)
+
+        self.lbl_ct_desc = QLabel(self.info)
+        self.lbl_ct_desc.setObjectName(u"lbl_ct_desc")
+
+        self.gridLayout_3.addWidget(self.lbl_ct_desc, 2, 0, 1, 1)
+
+        self.lbl_ct_time = QLabel(self.info)
+        self.lbl_ct_time.setObjectName(u"lbl_ct_time")
+
+        self.gridLayout_3.addWidget(self.lbl_ct_time, 1, 3, 1, 1)
+
+        self.btn_ct_create = QPushButton(self.info)
+        self.btn_ct_create.setObjectName(u"btn_ct_create")
+
+        self.gridLayout_3.addWidget(self.btn_ct_create, 0, 5, 1, 1)
+
+        self.textEdit = QTextEdit(self.info)
+        self.textEdit.setObjectName(u"textEdit")
+
+        self.gridLayout_3.addWidget(self.textEdit, 2, 1, 1, 1)
+
+
+        self.verticalLayout_9.addWidget(self.info)
+
+        self.q_controls = QWidget(self.w_cr)
+        self.q_controls.setObjectName(u"q_controls")
+        self.horizontalLayout_3 = QHBoxLayout(self.q_controls)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.btn_ct_add = QPushButton(self.q_controls)
+        self.btn_ct_add.setObjectName(u"btn_ct_add")
+        self.btn_ct_add.clicked.connect(self.add_q)
+
+        self.horizontalLayout_3.addWidget(self.btn_ct_add)
+
+        self.btn_ct_remove = QPushButton(self.q_controls)
+        self.btn_ct_remove.setObjectName(u"btn_ct_remove")
+
+        self.horizontalLayout_3.addWidget(self.btn_ct_remove)
+
+
+        self.verticalLayout_9.addWidget(self.q_controls)
+
+#####################################################
+        self.w_list = []
+        self.hs_list = []
+        self.gl_list = []
+        self.q_le_list = []
+        self.q_lbl_list = []
+        self.a_le_list = []
+        self.a_lbl_list = []
+
+        self.w_list.append(QWidget(self.w_cr))
+        self.gl_list.append(QGridLayout(self.w_list[0]))
+        self.hs_list.append(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        self.gl_list[0].addItem(self.hs_list[0], 0, 2, 1, 1)
+
+        self.q_lbl_list.append(QLabel(self.w_list[0]))
+        self.q_le_list.append(QLineEdit(self.w_list[0]))
+
+        self.a_lbl_list.append(QLabel(self.w_list[0]))
+        self.a_le_list.append(QLineEdit(self.w_list[0]))
+
+        self.gl_list[0].addWidget(self.a_lbl_list[0], 1, 0, 1, 1)
+        self.gl_list[0].addWidget(self.a_le_list[0], 1, 1, 1, 1)
+
+        self.gl_list[0].addWidget(self.q_lbl_list[0], 0, 0, 1, 1)
+        self.gl_list[0].addWidget(self.q_le_list[0], 0, 1, 1, 1)
+        
+        self.verticalLayout_9.addWidget(self.w_list[0])
+######################################################
+        self.verticalLayout_8.addWidget(self.w_cr)
+
+        self.stackedWidget.addWidget(self.create_test)
+        self.view_tests = QWidget()
+        self.view_tests.setObjectName(u"view_tests")
+        self.stackedWidget.addWidget(self.view_tests)
 
         self.verticalLayout_2.addWidget(self.stackedWidget)
 
@@ -230,18 +406,67 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.pushButton.setText("")
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u0442\u0435\u0441\u0442", None))
-        self.lbl_ln.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u043c\u0438\u043b\u0438\u044f", None))
-        self.lbl_log.setText(QCoreApplication.translate("MainWindow", u"\u041b\u043e\u0433\u0438\u043d", None))
+        self.btn_tm_account.setText("")
+        self.btn_lm_ct.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u0442\u0435\u0441\u0442", None))
+        self.btn_lm_mt.setText(QCoreApplication.translate("MainWindow", u"\u041c\u043e\u0438 \u0442\u0435\u0441\u0442\u044b", None))
+        self.lbl_greet.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0440\u043e \u043f\u043e\u0436\u0430\u043b\u043e\u0432\u0430\u0442\u044c", None))
+        self.lbl_r_ln.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u043c\u0438\u043b\u0438\u044f", None))
+        self.lbl_r_fn.setText(QCoreApplication.translate("MainWindow", u"\u0418\u043c\u044f", None))
+        self.lbl_r_mail.setText(QCoreApplication.translate("MainWindow", u"Email", None))
+        self.lbl_r_log.setText(QCoreApplication.translate("MainWindow", u"\u041b\u043e\u0433\u0438\u043d", None))
         self.btn_reg.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u0442\u0441\u044f", None))
-        self.lbl_mn.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u0447\u0435\u0441\u0442\u0432\u043e", None))
-        self.lbl_fn.setText(QCoreApplication.translate("MainWindow", u"\u0418\u043c\u044f", None))
-        self.lbl_mail.setText(QCoreApplication.translate("MainWindow", u"Email", None))
-        self.lbl_pwd.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u043e\u043b\u044c", None))
-        self.lbl_greet.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0440\u043e \u041f\u043e\u0436\u0430\u043b\u043e\u0432\u0430\u0442\u044c", None))
+        self.lbl_r_mn.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u0447\u0435\u0441\u0442\u0432\u043e", None))
+        self.lbl_r_pwd.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u043e\u043b\u044c", None))
+        self.lbl_registration.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044f", None))
+        self.btn_log.setText(QCoreApplication.translate("MainWindow", u"\u0412\u043e\u0439\u0442\u0438", None))
+        self.lbl_l_pwd.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u043e\u043b\u044c", None))
+        self.lbl_l_log.setText(QCoreApplication.translate("MainWindow", u"\u041b\u043e\u0433\u0438\u043d", None))
+        self.lbl_login.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0445\u043e\u0434", None))
+        self.lbl_ct.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u0442\u0435\u0441\u0442", None))
+        self.lbl_ct_name.setText(QCoreApplication.translate("MainWindow", u"\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", None))
+        self.lbl_ct_desc.setText(QCoreApplication.translate("MainWindow", u"\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435", None))
+        self.lbl_ct_time.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0440\u0435\u043c\u044f \u0442\u0435\u0441\u0442\u0430 (\u043c\u0438\u043d\u0443\u0442)", None))
+        self.btn_ct_create.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0437\u0434\u0430\u0442\u044c", None))
+        self.btn_ct_add.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432\u043e\u043f\u0440\u043e\u0441", None))
+        self.btn_ct_remove.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u0432\u043e\u043f\u0440\u043e\u0441", None))
+        self.q_lbl_list[0].setText(QCoreApplication.translate("MainWindow", u"\u0412\u043e\u043f\u0440\u043e\u0441 1", None))
+        self.a_lbl_list[0].setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u0432\u0435\u0442 1", None))
     # retranslateUi
+
+    def page_greet(self):
+        self.stackedWidget.setCurrentIndex(0)
+    def menu_reg(self):
+        self.stackedWidget.setCurrentIndex(1)
+    def menu_log(self):
+        self.stackedWidget.setCurrentIndex(2)
+    def page_ct(self):
+        self.stackedWidget.setCurrentIndex(3)
+    def page_mt(self):
+        self.stackedWidget.setCurrentIndex(4)
+
     def register(self):
         db = DB()
-        db.reg(self.lineEdit_ln.text(), self.lineEdit_fn.text(), self.lineEdit_mn.text(), self.lineEdit_mail.text(), self.lineEdit_log.text(), self.lineEdit_pwd.text())
-        self.stackedWidget.setCurrentIndex(1)
+        db.reg(self.le_r_ln.text(), self.le_r_fn.text(), self.le_r_mn.text(), self.le_r_mail.text(), self.le_r_log.text(), self.le_r_pwd.text())
+
+    def add_q(self):
+        i = len(self.w_list)
+        self.w_list.append(QWidget(self.w_cr))
+        self.gl_list.append(QGridLayout(self.w_list[i]))
+        self.hs_list.append(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        self.gl_list[i].addItem(self.hs_list[i], 0, 2, 1, 1)
+
+        self.q_lbl_list.append(QLabel(self.w_list[i]))
+        self.q_le_list.append(QLineEdit(self.w_list[i]))
+
+        self.a_lbl_list.append(QLabel(self.w_list[i]))
+        self.a_le_list.append(QLineEdit(self.w_list[i]))
+
+        self.gl_list[i].addWidget(self.a_lbl_list[i], 1, 0, 1, 1)
+        self.gl_list[i].addWidget(self.a_le_list[i], 1, 1, 1, 1)
+
+        self.gl_list[i].addWidget(self.q_lbl_list[i], 0, 0, 1, 1)
+        self.gl_list[i].addWidget(self.q_le_list[i], 0, 1, 1, 1)
+        
+        self.verticalLayout_9.addWidget(self.w_list[i])
+        self.q_lbl_list[i].setText(QCoreApplication.translate("MainWindow", u"\u0412\u043e\u043f\u0440\u043e\u0441 1", None))
+        self.a_lbl_list[i].setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u0432\u0435\u0442 1", None))
