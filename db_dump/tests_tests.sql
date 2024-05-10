@@ -26,12 +26,12 @@ CREATE TABLE `tests` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text,
-  `time` datetime DEFAULT NULL,
-  `teachers_id` bigint unsigned NOT NULL,
+  `time` bigint DEFAULT NULL,
+  `teachers_id` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_tests_teachers1_idx` (`teachers_id`),
   CONSTRAINT `fk_tests_teachers1` FOREIGN KEY (`teachers_id`) REFERENCES `teachers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +40,7 @@ CREATE TABLE `tests` (
 
 LOCK TABLES `tests` WRITE;
 /*!40000 ALTER TABLE `tests` DISABLE KEYS */;
+INSERT INTO `tests` VALUES (10,'1','2',3,NULL),(11,'qq','qwerty',90,NULL);
 /*!40000 ALTER TABLE `tests` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-22 13:07:17
+-- Dump completed on 2024-05-10 13:57:07

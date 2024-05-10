@@ -46,6 +46,8 @@ def handle_message(message):
     markup.add(info_btn)
     
     bot.send_message(message.chat.id, f'Выбран тест: {selected_test[1]}', reply_markup=markup)
+    global selection
+    selection = selected_test[0]
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
@@ -53,6 +55,7 @@ def callback_handler(call):
     global questions
     global msg
     global answers
+
     if call.data == 'info':
         cursor.execute('SELECT * FROM tests')
         selected_test = cursor.fetchone()
@@ -62,7 +65,7 @@ def callback_handler(call):
 
     if call.data == 'start_test':
         i = 0
-        cursor.execute('SELECT tests.questions.name, tests_id FROM tests.questions JOIN tests.tests_questions ON tests.questions.id = tests.tests_questions.questions_id')
+        cursor.execute(f'SELECT tests.questions.name, tests_id FROM tests.questions JOIN tests.tests_questions ON tests.questions.id = tests.tests_questions.questions_id WHERE tests_id = {selection}')
         questions = cursor.fetchall()
         questions = [n[0] for n in questions]
         markup = types.InlineKeyboardMarkup()

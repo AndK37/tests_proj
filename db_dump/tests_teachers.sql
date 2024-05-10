@@ -31,7 +31,7 @@ CREATE TABLE `teachers` (
   `login` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `teachers` (
 
 LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
-INSERT INTO `teachers` VALUES (1,'smith','john','q','jqs@gmail.com','johns','a6414fc4b74e514ff60f9a6b43d474478c567425df8d3b7dfd56620de1c9632a'),(2,'q','w','e','r','t','a1fce4363854ff888cff4b8e7875d600c2682390412a8cf79b37d0b11148b0fa'),(3,'q','w','e','r','t','a1fce4363854ff888cff4b8e7875d600c2682390412a8cf79b37d0b11148b0fa');
+INSERT INTO `teachers` VALUES (5,'test','test','test','test','test','9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08');
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-22 13:07:18
+-- Dump completed on 2024-05-10 13:57:06
