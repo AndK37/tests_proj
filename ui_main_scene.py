@@ -322,8 +322,8 @@ class Ui_MainWindow(object):
 
         self.btn_ct_create = QPushButton(self.info)
         self.btn_ct_create.setObjectName(u"btn_ct_create")
-
         self.gridLayout_3.addWidget(self.btn_ct_create, 0, 5, 1, 1)
+        self.btn_ct_create.clicked.connect(self.create_test_db)
 
         self.textEdit = QTextEdit(self.info)
         self.textEdit.setObjectName(u"textEdit")
@@ -468,5 +468,12 @@ class Ui_MainWindow(object):
         self.gl_list[i].addWidget(self.q_le_list[i], 0, 1, 1, 1)
         
         self.verticalLayout_9.addWidget(self.w_list[i])
-        self.q_lbl_list[i].setText(QCoreApplication.translate("MainWindow", u"\u0412\u043e\u043f\u0440\u043e\u0441 1", None))
-        self.a_lbl_list[i].setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u0432\u0435\u0442 1", None))
+        self.q_lbl_list[i].setText(QCoreApplication.translate("MainWindow", f"Вопрос {i +1}", None))
+        self.a_lbl_list[i].setText(QCoreApplication.translate("MainWindow", f"Ответ {i + 1}", None))
+    
+    def create_test_db(self):
+        questions = [n.text() for n in self.q_le_list]
+        answers = [n.text() for n in self.a_le_list]
+
+        db = DB()
+        db.add_test(self.le_ct_name.text(), self.textEdit.toPlainText(), self.le_ct_time.text(), questions, answers)

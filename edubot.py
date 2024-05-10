@@ -1,6 +1,7 @@
 import telebot
 import mysql.connector
 from telebot import types
+import os
 
 db = mysql.connector.connect(
     host='localhost',
@@ -10,7 +11,10 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor()
 
-bot = telebot.TeleBot('7133925834:AAEhUDDIlK8oBv-97m2-ZnUMvNgSqUbBV3k') #@EduTestsBot
+TOKEN = None
+with open('token.txt') as f:
+    TOKEN = f.read().strip()
+bot = telebot.TeleBot(TOKEN) #@EduTestsBot
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -46,5 +50,10 @@ def callback_handler(call):
         test_description = selected_test[2]
         if selected_test:
             bot.reply_to(call.message, f'Описание теста: {test_description}')
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_handler(call):
+    if call.data == 'start_test':
+        questions = cursor.executemany('SELECT * FROM')
 
 bot.infinity_polling()
