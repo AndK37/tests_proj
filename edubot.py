@@ -19,35 +19,51 @@ bot = telebot.TeleBot(TOKEN) #@EduTestsBot
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, 'Добро пожаловать!')
-    
+    bot.send_message(message.chat.id, 'Добро пожаловать! Введите /help, для того чтобы получить список доступных команд')
+
+@bot.message_handler(commands=['help'])
+def show_help(message):
+    bot.reply_to(message, 'Команды: \n/list - вывод списка доступных тестов \n/test <название_теста> - поиск теста по названию \n/answer <ответ> - ввод ответа на вопрос')
+
+@bot.message_handler(commands=['list'])
+def list_tests(message):
     cursor.execute('SELECT * FROM tests')
     tests = cursor.fetchall()
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for test in tests:
-        test_btn = types.KeyboardButton(test[1])
-        markup.add(test_btn)
+    if tests:
+        test_list = 'Список доступных тестов:\n'
+        for test in tests:
+            test_list += f'{test[1]}\n'
+        bot.send_message(message.chat.id, test_list)
+    else:
+        bot.send_message(message.chat.id, 'В базе данных нет доступных тестов.')
     
-    bot.send_message(message.chat.id, 'Выберите тест', reply_markup=markup)
+@bot.message_handler(commands=['test'])
+def answer(message):
+    cursor.execute('SELECT * FROM tests')
+    tests = cursor.fetchall()
+    test_name = message.text.split()[1]
+    found_test = None
+    for test in tests:
+        if test[1] == test_name:
+            found_test = test
+            break
+
+    if found_test:
+        markup = types.InlineKeyboardMarkup()
+        start_btn = types.InlineKeyboardButton('Начать тестирование', callback_data='start_test')
+        markup.add(start_btn)
+        info_btn = types.InlineKeyboardButton('Описание', callback_data='info')
+        markup.add(info_btn)
+    
+        bot.send_message(message.chat.id, f'Выбран тест: {found_test[1]}', reply_markup=markup)
+        global selection
+        selection = found_test[0]
+    else:
+        bot.send_message(message.chat.id, f"Тест с названием '{test_name}' не найден.")
 
 @bot.message_handler(commands=['answer'])
 def answer(message):
     answers[i] = message.text.split()[1:][0]
-
-@bot.message_handler(func=lambda message: True)
-def handle_message(message):
-    cursor.execute('SELECT * FROM tests WHERE name=%s', (message.text,))
-    selected_test = cursor.fetchone()
-
-    markup = types.InlineKeyboardMarkup()
-    start_btn = types.InlineKeyboardButton('Начать тестирование', callback_data='start_test')
-    markup.add(start_btn)
-    info_btn = types.InlineKeyboardButton('Описание', callback_data='info')
-    markup.add(info_btn)
-    
-    bot.send_message(message.chat.id, f'Выбран тест: {selected_test[1]}', reply_markup=markup)
-    global selection
-    selection = selected_test[0]
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
