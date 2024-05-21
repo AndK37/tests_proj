@@ -3,6 +3,8 @@ import mysql.connector
 from telebot import types
 import os
 import time
+import threading
+import datetime
 
 db = mysql.connector.connect(
     host='localhost',
@@ -23,7 +25,7 @@ def start_message(message):
 
 @bot.message_handler(commands=['help'])
 def show_help(message):
-    bot.reply_to(message, 'Команды: \n/list - вывод списка доступных тестов \n/test <название_теста> - поиск теста по названию \n/answer <ответ> - ввод ответа на вопрос')
+    bot.reply_to(message, 'Команды: \n/list - вывод списка доступных тестов \n/test <название_теста> - поиск теста по названию')
 
 @bot.message_handler(commands=['list'])
 def list_tests(message):
@@ -38,10 +40,11 @@ def list_tests(message):
         bot.send_message(message.chat.id, 'В базе данных нет доступных тестов.')
     
 @bot.message_handler(commands=['test'])
-def answer(message):
+def answer_test(message):
     cursor.execute('SELECT * FROM tests')
     tests = cursor.fetchall()
     test_name = message.text.split()[1]
+    global found_test
     found_test = None
     for test in tests:
         if test[1] == test_name:
@@ -61,9 +64,9 @@ def answer(message):
     else:
         bot.send_message(message.chat.id, f"Тест с названием '{test_name}' не найден.")
 
-@bot.message_handler(commands=['answer'])
+@bot.message_handler(content_types=["text"])
 def answer(message):
-    answers[i] = message.text.split()[1:][0]
+    answers[i] = message.text
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
@@ -71,18 +74,38 @@ def callback_handler(call):
     global questions
     global msg
     global answers
+    global photos
 
     if call.data == 'info':
-        cursor.execute('SELECT * FROM tests')
-        selected_test = cursor.fetchone()
-        test_description = selected_test[2]
-        if selected_test:
-            bot.reply_to(call.message, f'Описание теста: {test_description}')
+        bot.reply_to(call.message, f'Описание теста: {found_test[2]}')
 
     if call.data == 'start_test':
+        def test_time():
+            d = datetime.timedelta(minutes=found_test[3])
+            n = datetime.datetime.now()
+            n += d
+            while True:
+                if call.data == 'exit':
+                    break
+                if str(datetime.datetime.now().strftime("%H:%M")) == str(n.strftime("%H:%M")):
+                    global result
+                    j = 0
+                    p = 0
+                    for answer in answers:
+                        if str(list(answers.values())[answer]) == str(questions[j]):
+                            p += 1
+                            j += 1
+                    result = f'{p}/{len(questions)}'
+                    bot.send_message(call.message.chat.id, f'Тест окончен\nРезультат: {result}')
+                    bot.delete_message(msg.chat.id, msg.message_id)
+                    break
+
+        x = threading.Thread(target=test_time)
+        x.start()
         i = 0
-        cursor.execute(f'SELECT tests.questions.name, tests_id FROM tests.questions JOIN tests.tests_questions ON tests.questions.id = tests.tests_questions.questions_id WHERE tests_id = {selection}')
+        cursor.execute(f'SELECT tests.questions.name, tests_id, tests.questions.image FROM tests.questions JOIN tests.tests_questions ON tests.questions.id = tests.tests_questions.questions_id WHERE tests_id = {selection}')
         questions = cursor.fetchall()
+        photos = [n[2] for n in questions]
         questions = [n[0] for n in questions]
         markup = types.InlineKeyboardMarkup()
         markup.row_width = 3
@@ -91,9 +114,12 @@ def callback_handler(call):
                    types.InlineKeyboardButton("➡️", callback_data="right"), 
                    types.InlineKeyboardButton("Ответы", callback_data="answer"), 
                    types.InlineKeyboardButton("Закончить тест", callback_data="exit"))
-        msg = bot.send_message(call.message.chat.id, f'{questions[i]}', reply_markup=markup)
+        with open('misc\\placeholder.png', 'rb') as f:
+            if photos[i] != None:
+                msg = bot.send_photo(call.message.chat.id, photo=photos[i], caption=f'{questions[i]}', reply_markup=markup)
+            else:
+                msg = bot.send_photo(call.message.chat.id, photo=f, caption=f'{questions[i]}', reply_markup=markup)
         answers = {}
-
 
     if call.data == 'left':
         if i == 0:
@@ -107,7 +133,11 @@ def callback_handler(call):
                    types.InlineKeyboardButton("➡️", callback_data="right"), 
                    types.InlineKeyboardButton("Ответы", callback_data="answer"), 
                    types.InlineKeyboardButton("Закончить тест", callback_data="exit"))
-        bot.edit_message_text(chat_id=call.message.chat.id, text=questions[i], message_id=msg.message_id, reply_markup=markup)
+        with open('misc\\placeholder.png', 'rb') as f:
+            if photos[i] != None:
+                bot.edit_message_media(chat_id=call.message.chat.id, message_id=msg.message_id, media=types.InputMediaPhoto(media=photos[i], caption = f'{questions[i]}'), reply_markup=markup)
+            else:
+                bot.edit_message_media(chat_id=call.message.chat.id, message_id=msg.message_id, media=types.InputMediaPhoto(media=f, caption = f'{questions[i]}'), reply_markup=markup)
 
     if call.data == 'right':
         if i == len(questions):
@@ -121,14 +151,27 @@ def callback_handler(call):
                    types.InlineKeyboardButton("➡️", callback_data="right"), 
                    types.InlineKeyboardButton("Ответы", callback_data="answer"), 
                    types.InlineKeyboardButton("Закончить тест", callback_data="exit"))
-        bot.edit_message_text(chat_id=call.message.chat.id, text=questions[i], message_id=msg.message_id, reply_markup=markup)
+        with open('misc\\placeholder.png', 'rb') as f:
+            if photos[i] != None:
+                bot.edit_message_media(chat_id=call.message.chat.id, message_id=msg.message_id, media=types.InputMediaPhoto(media=photos[i], caption = f'{questions[i]}'), reply_markup=markup)
+            else:
+                bot.edit_message_media(chat_id=call.message.chat.id, message_id=msg.message_id, media=types.InputMediaPhoto(media=f, caption = f'{questions[i]}'), reply_markup=markup)
 
     if call.data == 'answer':
         for answer in answers:
             bot.send_message(call.message.chat.id, f'{answer + 1}) {list(answers.values())[answer]}')
 
-
     if call.data == 'exit':
+        bot.delete_message(msg.chat.id, msg.message_id)
+        global result
+        j = 0
+        p = 0
+        for answer in answers:
+            if str(list(answers.values())[answer]) == str(questions[j]):
+                p += 1
+            j += 1
+        result = f'{p}/{len(questions)}'
+        bot.send_message(call.message.chat.id, f'Тест окончен\nРезультат: {result}')
         #TODO: бд функционал
         pass 
 
