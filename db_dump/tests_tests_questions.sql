@@ -31,7 +31,7 @@ CREATE TABLE `tests_questions` (
   KEY `fk_tests_questions_tests1_idx` (`tests_id`),
   CONSTRAINT `fk_tests_questions_questions1` FOREIGN KEY (`questions_id`) REFERENCES `questions` (`id`),
   CONSTRAINT `fk_tests_questions_tests1` FOREIGN KEY (`tests_id`) REFERENCES `tests` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `tests_questions` (
 
 LOCK TABLES `tests_questions` WRITE;
 /*!40000 ALTER TABLE `tests_questions` DISABLE KEYS */;
-INSERT INTO `tests_questions` VALUES (4,6,10),(5,7,10),(6,8,10),(7,9,11),(8,10,11),(9,11,11),(10,12,11),(11,13,11);
+INSERT INTO `tests_questions` VALUES (4,6,10),(5,7,10),(6,8,10),(7,9,11),(8,10,11),(9,11,11),(10,12,11),(11,13,11),(12,14,12),(13,15,12),(14,16,12);
 /*!40000 ALTER TABLE `tests_questions` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-10 13:57:07
+-- Dump completed on 2024-05-22 17:01:16

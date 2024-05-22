@@ -25,13 +25,13 @@ DROP TABLE IF EXISTS `students_tests`;
 CREATE TABLE `students_tests` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `tests_id` bigint unsigned NOT NULL,
-  `students_id` bigint unsigned NOT NULL,
+  `students_id` varchar(255) NOT NULL,
+  `result` bigint unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_students_tests_tests1_idx` (`tests_id`),
   KEY `fk_students_tests_students1_idx` (`students_id`),
-  CONSTRAINT `fk_students_tests_students1` FOREIGN KEY (`students_id`) REFERENCES `students` (`id`),
   CONSTRAINT `fk_students_tests_tests1` FOREIGN KEY (`tests_id`) REFERENCES `tests` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +40,7 @@ CREATE TABLE `students_tests` (
 
 LOCK TABLES `students_tests` WRITE;
 /*!40000 ALTER TABLE `students_tests` DISABLE KEYS */;
+INSERT INTO `students_tests` VALUES (1,12,'3',0);
 /*!40000 ALTER TABLE `students_tests` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-10 13:57:06
+-- Dump completed on 2024-05-22 17:01:16

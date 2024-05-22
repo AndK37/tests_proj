@@ -58,15 +58,17 @@ def answer_test(message):
         info_btn = types.InlineKeyboardButton('Описание', callback_data='info')
         markup.add(info_btn)
     
-        bot.send_message(message.chat.id, f'Выбран тест: {found_test[1]}', reply_markup=markup)
+        bot.send_message(message.chat.id, f'Выбран тест: {found_test[1]}\nВремя: {found_test[3]} мин.', reply_markup=markup)
         global selection
         selection = found_test[0]
+        global tg
+        tg = message.from_user.username
     else:
         bot.send_message(message.chat.id, f"Тест с названием '{test_name}' не найден.")
 
 @bot.message_handler(content_types=["text"])
 def answer(message):
-    answers[i] = message.text
+    answers[i + 1] = message.text
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
@@ -80,25 +82,35 @@ def callback_handler(call):
         bot.reply_to(call.message, f'Описание теста: {found_test[2]}')
 
     if call.data == 'start_test':
+        global exit_test
+        exit_test = False
+        global x
         def test_time():
             d = datetime.timedelta(minutes=found_test[3])
             n = datetime.datetime.now()
             n += d
             while True:
-                if call.data == 'exit':
-                    break
+                if exit_test:
+                    return 0
                 if str(datetime.datetime.now().strftime("%H:%M")) == str(n.strftime("%H:%M")):
+                    bot.delete_message(msg.chat.id, msg.message_id)
                     global result
                     j = 0
                     p = 0
-                    for answer in answers:
-                        if str(list(answers.values())[answer]) == str(questions[j]):
+                    s = ''
+                    for _ in answers:
+                        if str(list(answers.values())[j]) == str(answer_t[j]):
                             p += 1
-                            j += 1
+                            s += f'✅ {j + 1}: {answer_t[j]}\n'
+                        else:
+                            s += f'❌ {j + 1}: {list(answers.values())[j]}\n'
+                        j += 1
                     result = f'{p}/{len(questions)}'
-                    bot.send_message(call.message.chat.id, f'Тест окончен\nРезультат: {result}')
-                    bot.delete_message(msg.chat.id, msg.message_id)
-                    break
+                    s += f'Тест окончен\nРезультат: {result}'
+                    bot.send_message(call.message.chat.id, s)
+
+                    cursor.execute("INSERT INTO students_tests (tests_id, students_id, result) VALUES (%s, %s, %s)", (found_test[0], call.message.from_user.username, result))
+                    db.commit()
 
         x = threading.Thread(target=test_time)
         x.start()
@@ -119,7 +131,18 @@ def callback_handler(call):
                 msg = bot.send_photo(call.message.chat.id, photo=photos[i], caption=f'{questions[i]}', reply_markup=markup)
             else:
                 msg = bot.send_photo(call.message.chat.id, photo=f, caption=f'{questions[i]}', reply_markup=markup)
+        
         answers = {}
+        for k in range(len(questions)):
+            answers[k + 1] = 'Нет ответа'
+
+        global answer_t
+        cursor.execute(f"SELECT answers.name FROM questions_answers JOIN questions ON questions.id = questions_id JOIN answers ON answers.id = answers_id JOIN tests_questions ON questions_answers.questions_id = tests_questions.questions_id WHERE tests_id = {found_test[0]}")
+        answer_t = cursor.fetchall()
+        answer_t = [n[0] for n in answer_t]
+
+        # print(answers)
+        # print(answer_t)
 
     if call.data == 'left':
         if i == 0:
@@ -158,22 +181,31 @@ def callback_handler(call):
                 bot.edit_message_media(chat_id=call.message.chat.id, message_id=msg.message_id, media=types.InputMediaPhoto(media=f, caption = f'{questions[i]}'), reply_markup=markup)
 
     if call.data == 'answer':
-        for answer in answers:
-            bot.send_message(call.message.chat.id, f'{answer + 1}) {list(answers.values())[answer]}')
+        a = 0
+        for _ in answers:
+            bot.send_message(call.message.chat.id, f'{a + 1}) {list(answers.values())[a]}')
+            a += 1
 
     if call.data == 'exit':
+        exit_test = True
         bot.delete_message(msg.chat.id, msg.message_id)
         global result
         j = 0
         p = 0
-        for answer in answers:
-            if str(list(answers.values())[answer]) == str(questions[j]):
+        s = ''
+        for _ in answers:
+            if str(list(answers.values())[j]) == str(answer_t[j]):
                 p += 1
+                s += f'✅ {j + 1}: {answer_t[j]}\n'
+            else:
+                s += f'❌ {j + 1}: {list(answers.values())[j]}\n'
             j += 1
         result = f'{p}/{len(questions)}'
-        bot.send_message(call.message.chat.id, f'Тест окончен\nРезультат: {result}')
-        #TODO: бд функционал
-        pass 
+        s += f'Тест окончен\nРезультат: {result}'
+        bot.send_message(call.message.chat.id, s)
 
+        cursor.execute("INSERT INTO students (tg_id) VALUES (%s)", (tg,))
+        cursor.execute("INSERT INTO students_tests (tests_id, students_id, result) VALUES (%s, %s, %s)", (found_test[0], cursor.lastrowid, p))
+        db.commit()
 
 bot.infinity_polling()

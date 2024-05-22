@@ -26,7 +26,7 @@ CREATE TABLE `answers` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +35,7 @@ CREATE TABLE `answers` (
 
 LOCK TABLES `answers` WRITE;
 /*!40000 ALTER TABLE `answers` DISABLE KEYS */;
-INSERT INTO `answers` VALUES (10,'w'),(11,'r'),(12,'y'),(13,'w'),(14,'r'),(15,'y'),(16,'w'),(17,'r'),(18,'y'),(19,'htyjyt'),(20,'syjytj'),(21,'jku'),(22,'u7k8'),(23,'ntyj'),(24,'htyjyt'),(25,'syjytj'),(26,'jku'),(27,'u7k8'),(28,'ntyj'),(29,'htyjyt'),(30,'syjytj'),(31,'jku'),(32,'u7k8'),(33,'ntyj'),(34,'htyjyt'),(35,'syjytj'),(36,'jku'),(37,'u7k8'),(38,'ntyj'),(39,'htyjyt'),(40,'syjytj'),(41,'jku'),(42,'u7k8'),(43,'ntyj');
+INSERT INTO `answers` VALUES (10,'w'),(11,'r'),(12,'y'),(13,'w'),(14,'r'),(15,'y'),(16,'w'),(17,'r'),(18,'y'),(19,'htyjyt'),(20,'syjytj'),(21,'jku'),(22,'u7k8'),(23,'ntyj'),(24,'htyjyt'),(25,'syjytj'),(26,'jku'),(27,'u7k8'),(28,'ntyj'),(29,'htyjyt'),(30,'syjytj'),(31,'jku'),(32,'u7k8'),(33,'ntyj'),(34,'htyjyt'),(35,'syjytj'),(36,'jku'),(37,'u7k8'),(38,'ntyj'),(39,'htyjyt'),(40,'syjytj'),(41,'jku'),(42,'u7k8'),(43,'ntyj'),(44,'rty'),(45,'fgh'),(46,'vbn');
 /*!40000 ALTER TABLE `answers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -48,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-10 13:57:06
+-- Dump completed on 2024-05-22 17:01:16

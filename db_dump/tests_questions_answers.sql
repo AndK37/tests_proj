@@ -31,7 +31,7 @@ CREATE TABLE `questions_answers` (
   KEY `fk_questions_answers_questions1_idx` (`questions_id`),
   CONSTRAINT `fk_questions_answers_answers` FOREIGN KEY (`answers_id`) REFERENCES `answers` (`id`),
   CONSTRAINT `fk_questions_answers_questions1` FOREIGN KEY (`questions_id`) REFERENCES `questions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `questions_answers` (
 
 LOCK TABLES `questions_answers` WRITE;
 /*!40000 ALTER TABLE `questions_answers` DISABLE KEYS */;
-INSERT INTO `questions_answers` VALUES (10,10,6),(11,11,6),(12,12,6),(13,13,7),(14,14,7),(15,15,7),(16,16,8),(17,17,8),(18,18,8),(19,19,9),(20,20,9),(21,21,9),(22,22,9),(23,23,9),(24,24,10),(25,25,10),(26,26,10),(27,27,10),(28,28,10),(29,29,11),(30,30,11),(31,31,11),(32,32,11),(33,33,11),(34,34,12),(35,35,12),(36,36,12),(37,37,12),(38,38,12),(39,39,13),(40,40,13),(41,41,13),(42,42,13),(43,43,13);
+INSERT INTO `questions_answers` VALUES (10,10,6),(11,11,6),(12,12,6),(13,13,7),(14,14,7),(15,15,7),(16,16,8),(17,17,8),(18,18,8),(19,19,9),(20,20,9),(21,21,9),(22,22,9),(23,23,9),(24,24,10),(25,25,10),(26,26,10),(27,27,10),(28,28,10),(29,29,11),(30,30,11),(31,31,11),(32,32,11),(33,33,11),(34,34,12),(35,35,12),(36,36,12),(37,37,12),(38,38,12),(39,39,13),(40,40,13),(41,41,13),(42,42,13),(43,43,13),(44,44,14),(45,45,15),(46,46,16);
 /*!40000 ALTER TABLE `questions_answers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-10 13:57:07
+-- Dump completed on 2024-05-22 17:01:16
