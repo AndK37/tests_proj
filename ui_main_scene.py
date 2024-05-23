@@ -18,7 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QLineEdit, QMainWindow, QPushButton, QSizePolicy,
     QSpacerItem, QStackedWidget, QTextEdit, QVBoxLayout,
-    QWidget, QMenu)
+    QWidget, QMenu, QFileDialog)
 from db import DB
 
 
@@ -346,6 +346,8 @@ class Ui_MainWindow(object):
         self.btn_ct_remove = QPushButton(self.q_controls)
         self.btn_ct_remove.setObjectName(u"btn_ct_remove")
 
+        self.btn_ct_remove.clicked.connect(self.remove_q)
+
         self.horizontalLayout_3.addWidget(self.btn_ct_remove)
 
 
@@ -359,6 +361,8 @@ class Ui_MainWindow(object):
         self.q_lbl_list = []
         self.a_le_list = []
         self.a_lbl_list = []
+        self.img_list = {}
+        self.img_b_list = []
 
         self.w_list.append(QWidget(self.w_cr))
         self.gl_list.append(QGridLayout(self.w_list[0]))
@@ -371,12 +375,18 @@ class Ui_MainWindow(object):
         self.a_lbl_list.append(QLabel(self.w_list[0]))
         self.a_le_list.append(QLineEdit(self.w_list[0]))
 
+        self.img_b_list.append(QPushButton(self.w_list[0]))
+        self.img_b_list[0].clicked.connect(lambda: self.img_f_d(0))
+
+
         self.gl_list[0].addWidget(self.a_lbl_list[0], 1, 0, 1, 1)
         self.gl_list[0].addWidget(self.a_le_list[0], 1, 1, 1, 1)
 
         self.gl_list[0].addWidget(self.q_lbl_list[0], 0, 0, 1, 1)
         self.gl_list[0].addWidget(self.q_le_list[0], 0, 1, 1, 1)
-        
+
+        self.gl_list[0].addWidget(self.img_b_list[0], 2, 0, 1, 1)
+
         self.verticalLayout_9.addWidget(self.w_list[0])
 ######################################################
         self.verticalLayout_8.addWidget(self.w_cr)
@@ -431,6 +441,7 @@ class Ui_MainWindow(object):
         self.btn_ct_remove.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u0432\u043e\u043f\u0440\u043e\u0441", None))
         self.q_lbl_list[0].setText(QCoreApplication.translate("MainWindow", u"\u0412\u043e\u043f\u0440\u043e\u0441 1", None))
         self.a_lbl_list[0].setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u0432\u0435\u0442 1", None))
+        self.img_b_list[0].setText(QCoreApplication.translate("MainWindow", "Добавить фото", None))
     # retranslateUi
 
     def page_greet(self):
@@ -461,19 +472,36 @@ class Ui_MainWindow(object):
         self.a_lbl_list.append(QLabel(self.w_list[i]))
         self.a_le_list.append(QLineEdit(self.w_list[i]))
 
+        self.img_b_list.append(QPushButton(self.w_list[i]))
+        self.img_b_list[i].clicked.connect(lambda: self.img_f_d(i))
+
         self.gl_list[i].addWidget(self.a_lbl_list[i], 1, 0, 1, 1)
         self.gl_list[i].addWidget(self.a_le_list[i], 1, 1, 1, 1)
 
         self.gl_list[i].addWidget(self.q_lbl_list[i], 0, 0, 1, 1)
         self.gl_list[i].addWidget(self.q_le_list[i], 0, 1, 1, 1)
+
+        self.gl_list[i].addWidget(self.img_b_list[i], 2, 0, 1, 1)
         
         self.verticalLayout_9.addWidget(self.w_list[i])
-        self.q_lbl_list[i].setText(QCoreApplication.translate("MainWindow", f"Вопрос {i +1}", None))
+        self.q_lbl_list[i].setText(QCoreApplication.translate("MainWindow", f"Вопрос {i + 1}", None))
         self.a_lbl_list[i].setText(QCoreApplication.translate("MainWindow", f"Ответ {i + 1}", None))
-    
+        self.img_b_list[i].setText(QCoreApplication.translate("MainWindow", f"Добавить фото", None))
+
+    def remove_q(self):
+        # TODO: надо сделать
+        i = len(self.w_list)
+        self.verticalLayout_9.removeWidget(self.w_list[i])
+
     def create_test_db(self):
         questions = [n.text() for n in self.q_le_list]
         answers = [n.text() for n in self.a_le_list]
 
         db = DB()
-        db.add_test(self.le_ct_name.text(), self.textEdit.toPlainText(), self.le_ct_time.text(), questions, answers)
+        db.add_test(self.le_ct_name.text(), self.textEdit.toPlainText(), self.le_ct_time.text(), questions, answers, self.img_list)
+
+    def img_f_d(self, i):
+        a = QFileDialog.getOpenFileName()
+        with open(a[0], 'rb') as f:
+            self.img_list[i] = f.read()
+        print(self.img_list)
