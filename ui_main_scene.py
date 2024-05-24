@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QSpacerItem, QStackedWidget, QTextEdit, QVBoxLayout,
     QWidget, QMenu, QFileDialog)
 from db import DB
-
+import re
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -175,7 +175,7 @@ class Ui_MainWindow(object):
 
         self.btn_reg = QPushButton(self.widget)
         self.btn_reg.setObjectName(u"btn_reg")
-        self.btn_reg.clicked.connect(self.register)
+        self.btn_reg.clicked.connect(self.login_from_reg)
 
         self.gridLayout.addWidget(self.btn_reg, 8, 0, 1, 1)
 
@@ -242,6 +242,10 @@ class Ui_MainWindow(object):
         self.btn_log = QPushButton(self.widget_4)
         self.btn_log.setObjectName(u"btn_log")
 
+        self.t_data = None
+        self.btn_log.clicked.connect(self.login_to)
+
+
         self.gridLayout_2.addWidget(self.btn_log, 4, 0, 1, 1)
 
         self.le_l_pwd = QLineEdit(self.widget_4)
@@ -267,6 +271,12 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_5.addWidget(self.widget_4)
+
+        self.smtp = QPushButton(self.widget_4)
+        self.smtp.setObjectName(u"smtp")
+
+        self.gridLayout_2.addWidget(self.smtp, 5, 0, 1, 1)
+        self.smtp.setText(QCoreApplication.translate("MainWindow", "Новый пароль", None))
 
         self.stackedWidget.addWidget(self.login)
         self.create_test = QWidget()
@@ -324,6 +334,7 @@ class Ui_MainWindow(object):
         self.btn_ct_create.setObjectName(u"btn_ct_create")
         self.gridLayout_3.addWidget(self.btn_ct_create, 0, 5, 1, 1)
         self.btn_ct_create.clicked.connect(self.create_test_db)
+        self.btn_ct_create.clicked.connect(self.page_mt)
 
         self.textEdit = QTextEdit(self.info)
         self.textEdit.setObjectName(u"textEdit")
@@ -412,6 +423,9 @@ class Ui_MainWindow(object):
 
 
         QMetaObject.connectSlotsByName(MainWindow)
+
+        self.btn_lm_ct.setEnabled(False)
+        self.btn_lm_mt.setEnabled(False)
     # setupUi
 
     def retranslateUi(self, MainWindow):
@@ -455,10 +469,6 @@ class Ui_MainWindow(object):
     def page_mt(self):
         self.stackedWidget.setCurrentIndex(4)
 
-    def register(self):
-        db = DB()
-        db.reg(self.le_r_ln.text(), self.le_r_fn.text(), self.le_r_mn.text(), self.le_r_mail.text(), self.le_r_log.text(), self.le_r_pwd.text())
-
     def add_q(self):
         i = len(self.w_list)
         self.w_list.append(QWidget(self.w_cr))
@@ -498,10 +508,54 @@ class Ui_MainWindow(object):
         answers = [n.text() for n in self.a_le_list]
 
         db = DB()
-        db.add_test(self.le_ct_name.text(), self.textEdit.toPlainText(), self.le_ct_time.text(), questions, answers, self.img_list)
+        db.add_test(self.le_ct_name.text(), self.textEdit.toPlainText(), self.le_ct_time.text(), questions, answers, self.img_list, self.t_data[0])
 
     def img_f_d(self, i):
         a = QFileDialog.getOpenFileName()
         with open(a[0], 'rb') as f:
             self.img_list[i] = f.read()
         print(self.img_list)
+
+    def login_to(self):
+        l = self.le_l_log.text()
+        p = self.le_l_pwd.text()
+        db = DB()
+        self.t_data = db.login(l, p)
+        self.page_greet()
+        if self.t_data != None:
+            self.btn_lm_ct.setEnabled(True)
+            self.btn_lm_mt.setEnabled(True)
+            self.lbl_greet.setText(QCoreApplication.translate("MainWindow", f"Добро пожаловать {self.t_data[3]} {self.t_data[4]}", None))
+
+    def login_from_reg(self):
+        if self.le_r_ln.text() == '':
+            self.le_r_ln.clear()
+            self.lbl_r_ln.setStyleSheet(u'color: red')
+        elif self.le_r_fn.text() == '':
+            self.lbl_r_ln.setStyleSheet(u'color: black')
+            self.le_r_fn.clear()
+            self.lbl_r_fn.setStyleSheet(u'color: red')
+        elif self.le_r_log.text() == '':
+            self.lbl_r_fn.setStyleSheet(u'color: black')
+            self.le_r_log.clear()
+            self.lbl_r_log.setStyleSheet(u'color: red')
+        elif self.le_r_pwd.text() == '':
+            self.lbl_r_log.setStyleSheet(u'color: black')
+            self.le_r_pwd.clear()
+            self.lbl_r_pwd.setStyleSheet(u'color: red')
+        elif not (re.search(r'[^@]+@[^@]+\.[^@]+', self.le_r_mail.text())):
+            self.lbl_r_pwd.setStyleSheet(u'color: black')
+            self.le_r_mail.clear()
+            self.lbl_r_mail.setStyleSheet(u'color: red')
+        else:
+            self.lbl_r_mail.setStyleSheet(u'color: black')
+            l = self.le_r_log.text()
+            p = self.le_r_pwd.text()
+            db = DB()
+            db.reg(self.le_r_ln.text(), self.le_r_fn.text(), self.le_r_mn.text(), self.le_r_mail.text(), self.le_r_log.text(), self.le_r_pwd.text())
+            self.t_data = db.login(l, p)
+            self.page_greet()
+            if self.t_data != None:
+                self.btn_lm_ct.setEnabled(True)
+                self.btn_lm_mt.setEnabled(True)
+                self.lbl_greet.setText(QCoreApplication.translate("MainWindow", f"Добро пожаловать {self.t_data[3]} {self.t_data[4]}", None))

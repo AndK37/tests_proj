@@ -19,9 +19,9 @@ class DB:
         cursor.execute('INSERT INTO teachers (last_name, first_name, mid_name, email, login, password) VALUES (%s, %s, %s, %s, %s, %s)', (ln, fn, mn, e, l, p_h))
         self.db.commit()
 
-    def add_test(self, name, description, time, questions, answers, imgs):
+    def add_test(self, name, description, time, questions, answers, imgs, t_id):
         cursor = self.db.cursor()
-        cursor.execute('INSERT INTO tests (name, description, time) VALUES (%s, %s, %s)', (name, description, time))
+        cursor.execute('INSERT INTO tests (name, description, time, teachers_id) VALUES (%s, %s, %s, %s)', (name, description, time, t_id))
         #self.db.commit()
 
         self.test_id = cursor.lastrowid
@@ -38,3 +38,15 @@ class DB:
 
         self.db.commit()
         self.db.close()
+
+    def login(self, l, p):
+        h = hashlib.new('SHA256')
+        h.update(p.encode())
+        p_h = h.hexdigest()
+
+        cursor = self.db.cursor()
+        cursor.execute(f'SELECT id, login, password, first_name, mid_name FROM tests.teachers WHERE login = \"{l}\" AND password = \"{p_h}\"')
+        t_data = cursor.fetchone()
+
+        self.db.close()
+        return t_data

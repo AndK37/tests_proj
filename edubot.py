@@ -5,6 +5,8 @@ import os
 import time
 import threading
 import datetime
+from os import getenv
+from dotenv import load_dotenv
 
 db = mysql.connector.connect(
     host='localhost',
@@ -14,9 +16,8 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor()
 
-TOKEN = None
-with open('token.txt') as f:
-    TOKEN = f.read().strip()
+load_dotenv()
+TOKEN = str(getenv('TG_TOKEN'))
 bot = telebot.TeleBot(TOKEN) #@EduTestsBot
 
 @bot.message_handler(commands=['start'])
