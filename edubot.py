@@ -32,40 +32,22 @@ def show_help(message):
 def list_tests(message):
     cursor.execute('SELECT * FROM tests')
     tests = cursor.fetchall()
+
+    markup = types.InlineKeyboardMarkup()
+    tests_btns = []
     if tests:
         test_list = 'Список доступных тестов:\n'
         for test in tests:
-            test_list += f'{test[1]}\n'
-        bot.send_message(message.chat.id, test_list)
+            #test_list += f'{test[1]}\n'
+            tests_btns.append(types.InlineKeyboardButton(f'{test[1]}', callback_data=f'start_test:{test[1]}'))
+            markup.add(tests_btns[len(tests_btns) - 1])
+        bot.send_message(message.chat.id, test_list, reply_markup=markup)
     else:
         bot.send_message(message.chat.id, 'В базе данных нет доступных тестов.')
     
-@bot.message_handler(commands=['test'])
-def answer_test(message):
-    cursor.execute('SELECT * FROM tests')
-    tests = cursor.fetchall()
-    test_name = message.text.split()[1]
-    global found_test
-    found_test = None
-    for test in tests:
-        if test[1] == test_name:
-            found_test = test
-            break
-
-    if found_test:
-        markup = types.InlineKeyboardMarkup()
-        start_btn = types.InlineKeyboardButton('Начать тестирование', callback_data='start_test')
-        markup.add(start_btn)
-        info_btn = types.InlineKeyboardButton('Описание', callback_data='info')
-        markup.add(info_btn)
+# @bot.message_handler(commands=['test'])
+# def answer_test(message):
     
-        bot.send_message(message.chat.id, f'Выбран тест: {found_test[1]}\nВремя: {found_test[3]} мин.', reply_markup=markup)
-        global selection
-        selection = found_test[0]
-        global tg
-        tg = message.from_user.username
-    else:
-        bot.send_message(message.chat.id, f"Тест с названием '{test_name}' не найден.")
 
 @bot.message_handler(content_types=["text"])
 def answer(message):
@@ -78,6 +60,32 @@ def callback_handler(call):
     global msg
     global answers
     global photos
+
+    if call.data.startswith('start_test:'):
+        cursor.execute('SELECT * FROM tests')
+        tests = cursor.fetchall()
+        test_name = call.data.split(':')[1]
+        global found_test
+        found_test = None
+        for test in tests:
+            if test[1] == test_name:
+                found_test = test
+                break
+
+        if found_test:
+            markup = types.InlineKeyboardMarkup()
+            start_btn = types.InlineKeyboardButton('Начать тестирование', callback_data='start_test')
+            markup.add(start_btn)
+            info_btn = types.InlineKeyboardButton('Описание', callback_data='info')
+            markup.add(info_btn)
+        
+            bot.send_message(call.message.chat.id, f'Выбран тест: {found_test[1]}\nВремя: {found_test[3]} мин.', reply_markup=markup)
+            global selection
+            selection = found_test[0]
+            global tg
+            tg = call.message.from_user.username
+        else:
+            bot.send_message(call.message.chat.id, f"Тест с названием '{test_name}' не найден.")
 
     if call.data == 'info':
         bot.reply_to(call.message, f'Описание теста: {found_test[2]}')

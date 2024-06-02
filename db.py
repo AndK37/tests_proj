@@ -50,3 +50,10 @@ class DB:
 
         self.db.close()
         return t_data
+    
+    def view_tests(self, id):
+        cursor = self.db.cursor()
+        cursor.execute(f'SELECT name, description, time FROM tests.tests WHERE teachers_id = {id}')
+        data = cursor.fetchall()
+        self.db.close()
+        return data

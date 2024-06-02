@@ -24,6 +24,7 @@ import re
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(979, 653)
@@ -335,6 +336,7 @@ class Ui_MainWindow(object):
         self.gridLayout_3.addWidget(self.btn_ct_create, 0, 5, 1, 1)
         self.btn_ct_create.clicked.connect(self.create_test_db)
         self.btn_ct_create.clicked.connect(self.page_mt)
+        self.btn_ct_create.clicked.connect(self.vt)
 
         self.textEdit = QTextEdit(self.info)
         self.textEdit.setObjectName(u"textEdit")
@@ -400,15 +402,24 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_9.addWidget(self.w_list[0])
 ######################################################
+        
         self.verticalLayout_8.addWidget(self.w_cr)
 
         self.stackedWidget.addWidget(self.create_test)
+
+
         self.view_tests = QWidget()
         self.view_tests.setObjectName(u"view_tests")
-        self.stackedWidget.addWidget(self.view_tests)
+        self.verticalLayout_10 = QVBoxLayout(self.view_tests)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+
+        self.widget_3 = QWidget(self.view_tests)
+        self.widget_3.setObjectName(u"widget_3")
+        self.verticalLayout_10.addWidget(self.widget_3)
 
         self.verticalLayout_2.addWidget(self.stackedWidget)
 
+        self.stackedWidget.addWidget(self.view_tests)
 
         self.horizontalLayout_2.addWidget(self.right_menu)
 
@@ -467,6 +478,7 @@ class Ui_MainWindow(object):
     def page_ct(self):
         self.stackedWidget.setCurrentIndex(3)
     def page_mt(self):
+        self.vt()
         self.stackedWidget.setCurrentIndex(4)
 
     def add_q(self):
@@ -500,7 +512,7 @@ class Ui_MainWindow(object):
 
     def remove_q(self):
         # TODO: надо сделать
-        i = len(self.w_list)
+        i = len(self.w_list) - 1
         self.verticalLayout_9.removeWidget(self.w_list[i])
 
     def create_test_db(self):
@@ -514,7 +526,7 @@ class Ui_MainWindow(object):
         a = QFileDialog.getOpenFileName()
         with open(a[0], 'rb') as f:
             self.img_list[i] = f.read()
-        print(self.img_list)
+        #print(self.img_list)
 
     def login_to(self):
         l = self.le_l_log.text()
@@ -559,3 +571,37 @@ class Ui_MainWindow(object):
                 self.btn_lm_ct.setEnabled(True)
                 self.btn_lm_mt.setEnabled(True)
                 self.lbl_greet.setText(QCoreApplication.translate("MainWindow", f"Добро пожаловать {self.t_data[3]} {self.t_data[4]}", None))
+
+    def vt(self):
+        for i in reversed(range(self.verticalLayout_10.count())):
+            try:
+                self.verticalLayout_10.itemAt(i).widget().setParent(None)
+            except:
+                pass
+        db = DB()
+        data = db.view_tests(self.t_data[0])
+        #print(data)
+
+        self.vt_vs = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        
+
+        self.vt_w_list = []
+        self.vt_vl_list = []
+        self.vt_l_list_0 = []
+        self.vt_l_list_1 = []
+        self.vt_l_list_2 = []
+
+        for d in data:
+            self.vt_w_list.append(QWidget(self.widget_3))
+            self.vt_vl_list.append(QVBoxLayout(self.vt_w_list[len(self.vt_w_list) - 1]))
+            self.vt_l_list_0.append(QLabel(f'Название: {d[0]}', self.vt_w_list[len(self.vt_w_list) - 1]))
+            self.vt_l_list_1.append(QLabel(f'Описание: {d[1]}', self.vt_w_list[len(self.vt_w_list) - 1]))
+            self.vt_l_list_2.append(QLabel(f'Время: {d[2]}', self.vt_w_list[len(self.vt_w_list) - 1]))
+
+            self.vt_vl_list[len(self.vt_w_list) - 1].addWidget(self.vt_l_list_0[len(self.vt_w_list) - 1])
+            self.vt_vl_list[len(self.vt_w_list) - 1].addWidget(self.vt_l_list_1[len(self.vt_w_list) - 1])
+            self.vt_vl_list[len(self.vt_w_list) - 1].addWidget(self.vt_l_list_2[len(self.vt_w_list) - 1])
+            self.verticalLayout_10.addWidget(self.vt_w_list[len(self.vt_w_list) - 1])
+
+        self.verticalLayout_10.addItem(self.vt_vs)
+
