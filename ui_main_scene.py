@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
     QWidget, QMenu, QFileDialog)
 from db import DB
 import re
+from smtp import Mail
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -278,6 +279,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.smtp, 5, 0, 1, 1)
         self.smtp.setText(QCoreApplication.translate("MainWindow", "Новый пароль", None))
+        self.smtp.clicked.connect(lambda: Mail().send_mail(self.le_l_log.text()))
 
         self.stackedWidget.addWidget(self.login)
         self.create_test = QWidget()

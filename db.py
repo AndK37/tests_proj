@@ -6,7 +6,7 @@ class DB:
         self.db = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='qwerty123456',
+        password='',#qwerty123456
         database='tests'
         )
         
@@ -57,3 +57,9 @@ class DB:
         data = cursor.fetchall()
         self.db.close()
         return data
+    
+    def get_email_by_login(self, l):
+        cursor = self.db.cursor()
+        cursor.execute(f'SELECT email FROM teachers WHERE login = \"{l}\"')
+        email = cursor.fetchone()[0]
+        return email
